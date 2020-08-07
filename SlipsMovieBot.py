@@ -184,11 +184,97 @@ class MovieDB(commands.Cog):
         movieList.remove([int(entry) for entry in num])
         storage.write(movieFile, movieList.movies)
         response = f'{titles} has been removed from the movie list.'
+        await ctx.send(response)    
+
+
+    @commands.command(name='movieinfo', help='Displays imdb information for a given movie. Usage movieinfo MovieID Example movieinfo 0', brief='Displays the movie imdb information.')
+    async def get_movieinfo(self, ctx, *num):
+        titles = []
+        if not len(movieList.movies) > 0:
+            response = "There are currently no movies in the list. `!suggest` one!"
+            await ctx.send(response)
+            return
+
+        else:
+            for number in num:
+                try:
+                    choice = int(number)
+                except ValueError:
+                    response = f'{number} is not a number. Please give me a number.'
+                    await ctx.send(response)
+                    return
+            titles.append(movieList.movies[choice]['title'])
+            from imdb import IMDb
+            imdb = IMDb()
+            response = ""
+            movieinfo = ""
+
+        for title in titles:
+            movieinfo = imdb.search_movie(title)
+            movieinfo = movieinfo[0].movieID
+            movieinfo = imdb.get_movie(movieinfo)
+            try: 
+                movieinfo.get('plot')[1]
+                plotnum = 1
+            except IndexError:
+                plotnum = 0
+
+            plot = movieinfo.get('plot')[plotnum]
+            sep = '::'
+            plot = plot.split(sep, 1)[0]
+            year = movieinfo.get('year')
+            response = f'{title}, {year}: {plot}'
         await ctx.send(response)
 
 
 bot.add_cog(MovieDB())
 bot.add_cog(MoviePoll())
+
+
+
+#Show the time left until Movie Night
+@bot.command(name='when', help='Displays a countdown till Movie night.', brief='Displays a countdown till Movie night.')
+async def bot_when(ctx):
+    response = ""
+    wanted_day = 'friday'
+    wanted_time = 19
+    import time
+    import datetime
+    global time
+
+    list = [['monday', 0],['tuesday', 1],['wednesday', 2],['thursday', 3],['friday', 4],['saturday', 5],['sunday', 6]]
+
+    for i in list:
+        if wanted_day == i[0]:
+            number_wanted_day = i[1]
+    today = datetime.datetime.today().weekday()
+    equal = number_wanted_day == today
+    if equal == True:
+        delta_days = 0
+    else:
+        delta_days = number_wanted_day - today
+
+    time = time.localtime(time.time())
+
+    if wanted_time > time[3]:
+        delta_hours = wanted_time - time[3]- 1
+        delta_mins = 59 - time[4]
+        delta_secs = 59 - time[5]
+
+    else:
+        delta_hours = time[3] - 23
+        if delta_hours < 0:
+            delta_days = 7
+            delta_hours = 23 - time[3] + wanted_time
+            delta_mins = 59 - time[4] 
+        else:
+            delta_mins = 59 - time[4]
+            #delta_secs = 59 - time[5]
+
+    response = f'{delta_days} Days , {delta_hours} Hours, {delta_mins} Minutes Until Movie Time'
+    await ctx.send(response)
+
+
 bot.run(TOKEN)
 
 #--Future Features

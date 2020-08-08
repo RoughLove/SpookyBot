@@ -266,7 +266,7 @@ async def bot_when(ctx):
             delta_mins = 59 - time[4]
             #delta_secs = 59 - time[5]
 
-    response = f'{delta_days} Days , {delta_hours} Hours, {delta_mins} Minutes Until Movie Time'
+    response = f'{delta_days} Days , {delta_hours} Hours, {delta_mins} Minutes Until Movie Time(7pm Seattle Time)'
     await ctx.send(response)
 
 bot.run(TOKEN)

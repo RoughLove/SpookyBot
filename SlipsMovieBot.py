@@ -210,7 +210,13 @@ class MovieDB(commands.Cog):
             movieinfo = ""
 
         for title in titles:
+<<<<<<< HEAD
             movieinfo = imdb.get_movie(imdb.search_movie(title)[0].movieID)
+=======
+            movieinfo = imdb.search_movie(title)
+            movieinfo = movieinfo[0].movieID
+            movieinfo = imdb.get_movie(movieinfo)
+>>>>>>> 9024b87cc600b12eb3b452f62eb533e16d3920b8
             try:
                 movieinfo.get('plot')[1]
                 plotnum = 1
@@ -259,7 +265,7 @@ async def bot_when(ctx):
     else:
         delta_hours = time[3] - 23
         if delta_hours < 0:
-            delta_days = 7
+            delta_days = 6
             delta_hours = 23 - time[3] + wanted_time
             delta_mins = 59 - time[4]
         else:
@@ -270,3 +276,9 @@ async def bot_when(ctx):
     await ctx.send(response)
 
 bot.run(TOKEN)
+<<<<<<< HEAD
+=======
+
+#--Future Features
+#IMDB synopsis
+>>>>>>> 9024b87cc600b12eb3b452f62eb533e16d3920b8

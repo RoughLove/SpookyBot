@@ -184,7 +184,7 @@ class MovieDB(commands.Cog):
         movieList.remove([int(entry) for entry in num])
         storage.write(movieFile, movieList.movies)
         response = f'{titles} has been removed from the movie list.'
-        await ctx.send(response)    
+        await ctx.send(response)
 
 
     @commands.command(name='movieinfo', help='Displays imdb information for a given movie. Usage movieinfo MovieID Example movieinfo 0', brief='Displays the movie imdb information.')
@@ -213,7 +213,7 @@ class MovieDB(commands.Cog):
             movieinfo = imdb.search_movie(title)
             movieinfo = movieinfo[0].movieID
             movieinfo = imdb.get_movie(movieinfo)
-            try: 
+            try:
                 movieinfo.get('plot')[1]
                 plotnum = 1
             except IndexError:
@@ -264,9 +264,9 @@ async def bot_when(ctx):
     else:
         delta_hours = time[3] - 23
         if delta_hours < 0:
-            delta_days = 7
+            delta_days = 6
             delta_hours = 23 - time[3] + wanted_time
-            delta_mins = 59 - time[4] 
+            delta_mins = 59 - time[4]
         else:
             delta_mins = 59 - time[4]
             #delta_secs = 59 - time[5]

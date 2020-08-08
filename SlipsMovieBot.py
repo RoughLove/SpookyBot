@@ -259,7 +259,7 @@ async def bot_when(ctx):
     else:
         delta_hours = time[3] - 23
         if delta_hours < 0:
-            delta_days = 7
+            delta_days = 6
             delta_hours = 23 - time[3] + wanted_time
             delta_mins = 59 - time[4]
         else:

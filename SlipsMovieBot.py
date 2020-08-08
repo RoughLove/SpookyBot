@@ -184,7 +184,7 @@ class MovieDB(commands.Cog):
         movieList.remove([int(entry) for entry in num])
         storage.write(movieFile, movieList.movies)
         response = f'{titles} has been removed from the movie list.'
-        await ctx.send(response)    
+        await ctx.send(response)
 
 
     @commands.command(name='movieinfo', help='Displays imdb information for a given movie. Usage movieinfo MovieID Example movieinfo 0', brief='Displays the movie imdb information.')
@@ -210,18 +210,15 @@ class MovieDB(commands.Cog):
             movieinfo = ""
 
         for title in titles:
-            movieinfo = imdb.search_movie(title)
-            movieinfo = movieinfo[0].movieID
-            movieinfo = imdb.get_movie(movieinfo)
-            try: 
+            movieinfo = imdb.get_movie(imdb.search_movie(title)[0].movieID)
+            try:
                 movieinfo.get('plot')[1]
                 plotnum = 1
             except IndexError:
                 plotnum = 0
 
-            plot = movieinfo.get('plot')[plotnum]
             sep = '::'
-            plot = plot.split(sep, 1)[0]
+            plot = (movieinfo.get('plot')[plotnum]).split(sep, 1)[0]
             year = movieinfo.get('year')
             response = f'{title}, {year}: {plot}'
         await ctx.send(response)
@@ -229,8 +226,6 @@ class MovieDB(commands.Cog):
 
 bot.add_cog(MovieDB())
 bot.add_cog(MoviePoll())
-
-
 
 #Show the time left until Movie Night
 @bot.command(name='when', help='Displays a countdown till Movie night.', brief='Displays a countdown till Movie night.')
@@ -266,7 +261,7 @@ async def bot_when(ctx):
         if delta_hours < 0:
             delta_days = 7
             delta_hours = 23 - time[3] + wanted_time
-            delta_mins = 59 - time[4] 
+            delta_mins = 59 - time[4]
         else:
             delta_mins = 59 - time[4]
             #delta_secs = 59 - time[5]
@@ -274,8 +269,4 @@ async def bot_when(ctx):
     response = f'{delta_days} Days , {delta_hours} Hours, {delta_mins} Minutes Until Movie Time'
     await ctx.send(response)
 
-
 bot.run(TOKEN)
-
-#--Future Features
-#IMDB synopsis

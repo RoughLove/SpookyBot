@@ -242,31 +242,31 @@ async def bot_when(ctx):
         if wanted_hour > time[3]:
             delta_days = 0
             if time[3] == 0:
-                delta_hour = wanted_hour - 1
+                delta_hours = wanted_hour - 1
                 delta_mins = 59 - time[4]
             else:
-                delta_hour = wanted_hour - time[3]
+                delta_hours = wanted_hour - time[3]
                 delta_mins = 59 - time[4]
         else:
             delta_days = 6
-            delta_hour = 23 - time[3] + wanted_hour
+            delta_hours = 23 - time[3] + wanted_hour
             delta_mins = 59 - time[4]
     elif (wanted_day - today )== 1:
         if wanted_hour > time[3]:
             delta_days = 1
-            delta_hour = 23 - time[3] + wanted_hour
+            delta_hours = 23 - time[3] + wanted_hour
             delta_mins = 59 - time[4]
         else:
             delta_days = 0
-            delta_hour = 23 - time[3] + wanted_hour
+            delta_hours = 23 - time[3] + wanted_hour
             delta_mins = 59 - time[4]
     elif today > wanted_day:
         delta_days = wanted_day + 6 - today
-        delta_hour = wanted_hour - time[3]
+        delta_hours = wanted_hour - time[3]
         delta_mins = 59 - time[4]
     else:
         delta_days = wanted_day - today - 1
-        delta_hour = 23 - time[3] + wanted_hour
+        delta_hours = 23 - time[3] + wanted_hour
         delta_mins = 59 - time[4]
 
     response = f'{delta_days} Days , {delta_hours} Hours, {delta_mins} Minutes Until Movie Time(7pm Seattle Time)'

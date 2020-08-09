@@ -238,11 +238,7 @@ async def bot_when(ctx):
 
     today = int(datetime.datetime.today().weekday())
     time = time.localtime(time.time())
-    if today > wanted_day:
-        delta_days = wanted_day - today + 6
-        delta_hour = wanted_hour - time[3]
-        delta_mins = 59 - time[4]
-    elif today == wanted_day:
+    if today == wanted_day:
         if wanted_hour > time[3]:
             delta_days = 0
             if time[3] == 0:
@@ -264,6 +260,10 @@ async def bot_when(ctx):
             delta_days = 0
             delta_hour = 23 - time[3] + wanted_hour
             delta_mins = 59 - time[4]
+    elif today > wanted_day:
+        delta_days = wanted_day + 6 - today
+        delta_hour = wanted_hour - time[3]
+        delta_mins = 59 - time[4]
     else:
         delta_days = wanted_day - today - 1
         delta_hour = 23 - time[3] + wanted_hour

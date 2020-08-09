@@ -231,32 +231,42 @@ bot.add_cog(MoviePoll())
 @bot.command(name='when', help='Displays a countdown till Movie night.', brief='Displays a countdown till Movie night.')
 async def bot_when(ctx):
     response = ""
-    wanted_day = 'friday'
-    wanted_time = 19
-    import time
-    import datetime
-    global time
+    wanted_day = int('4')#monday 0,tuesday 1,wednesday 2,thursday 3,friday 4,saturday 5,sunday 6
+    wanted_hour = int('19')#0-23
+    #wanted_min = int('0') #0-59 not yet implemneted
+    import time,datetime
 
-    list = [['monday', 0],['tuesday', 1],['wednesday', 2],['thursday', 3],['friday', 4],['saturday', 5],['sunday', 6]]
-
-    for i in list:
-        if wanted_day == i[0]:
-            number_wanted_day = i[1]
-    today = datetime.datetime.today().weekday()
-    equal = number_wanted_day == today
-    if equal == True:
-        delta_days = 0
-    else:
-        delta_days = number_wanted_day - today
-
+    today = int(datetime.datetime.today().weekday())
     time = time.localtime(time.time())
-    delta_hours = time[3] - 23
-    if delta_hours < 0 and delta_days == 0:
-        delta_days = 6
-        delta_hours = 23 - time[3] + wanted_time
+    if today > wanted_day:
+        delta_days = wanted_day - today + 6
+        delta_hour = wanted_hour - time[3]
         delta_mins = 59 - time[4]
+    elif today == wanted_day:
+        if wanted_hour > time[3]:
+            delta_days = 0
+            if time[3] == 0:
+                delta_hour = wanted_hour - 1
+                delta_mins = 59 - time[4]
+            else:
+                delta_hour = wanted_hour - time[3]
+                delta_mins = 59 - time[4]
+        else:
+            delta_days = 6
+            delta_hour = 23 - time[3] + wanted_hour
+            delta_mins = 59 - time[4]
+    elif (wanted_day - today )== 1:
+        if wanted_hour > time[3]:
+            delta_days = 1
+            delta_hour = 23 - time[3] + wanted_hour
+            delta_mins = 59 - time[4]
+        else:
+            delta_days = 0
+            delta_hour = 23 - time[3] + wanted_hour
+            delta_mins = 59 - time[4]
     else:
-        delta_hours = wanted_time - time[3]- 1
+        delta_days = wanted_day - today - 1
+        delta_hour = 23 - time[3] + wanted_hour
         delta_mins = 59 - time[4]
 
     response = f'{delta_days} Days , {delta_hours} Hours, {delta_mins} Minutes Until Movie Time(7pm Seattle Time)'

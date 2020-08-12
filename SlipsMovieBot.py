@@ -6,6 +6,10 @@ import movies
 import os
 import storage
 import logging
+import datetime
+import dateutil.relativedelta as REL
+from dateutil import parser, tz
+from datetime import datetime, date
 
 from discord.ext import commands
 
@@ -137,6 +141,11 @@ class MoviePoll(commands.Cog):
             movieList.remove([winnerIndex])
             os.remove(pollFile)
             storage.write(movieFile, movieList.movies)
+            today = date.today()
+            rd = REL.relativedelta(days=1, weekday=REL.FR)
+            next_friday = (today + rd).strftime('%B %d, %Y') + " 7:00 PM"
+            with open('Event_DATE.txt', 'w') as fw:
+                fw.write(next_friday)
 
 
 class MovieDB(commands.Cog):
@@ -231,45 +240,12 @@ bot.add_cog(MoviePoll())
 @bot.command(name='when', help='Displays a countdown till Movie night.', brief='Displays a countdown till Movie night.')
 async def bot_when(ctx):
     response = ""
-    wanted_day = int('4')#monday 0,tuesday 1,wednesday 2,thursday 3,friday 4,saturday 5,sunday 6
-    wanted_hour = int('19')#0-23
-    #wanted_min = int('0') #0-59 not yet implemneted
-    import time,datetime
-
-    today = int(datetime.datetime.today().weekday())
-    time = time.localtime(time.time())
-    if today == wanted_day:
-        if wanted_hour > time[3]:
-            delta_days = 0
-            if time[3] == 0:
-                delta_hours = wanted_hour - 1
-                delta_mins = 59 - time[4]
-            else:
-                delta_hours = wanted_hour - time[3]
-                delta_mins = 59 - time[4]
-        else:
-            delta_days = 6
-            delta_hours = 23 - time[3] + wanted_hour
-            delta_mins = 59 - time[4]
-    elif (wanted_day - today )== 1:
-        if wanted_hour > time[3]:
-            delta_days = 1
-            delta_hours = 23 - time[3] + wanted_hour
-            delta_mins = 59 - time[4]
-        else:
-            delta_days = 0
-            delta_hours = 23 - time[3] + wanted_hour
-            delta_mins = 59 - time[4]
-    elif today > wanted_day:
-        delta_days = wanted_day + 6 - today
-        delta_hours = wanted_hour - time[3]
-        delta_mins = 59 - time[4]
-    else:
-        delta_days = wanted_day - today - 1
-        delta_hours = 23 - time[3] + wanted_hour
-        delta_mins = 59 - time[4]
-
-    response = f'{delta_days} Days , {delta_hours} Hours, {delta_mins} Minutes Until Movie Time(7pm Seattle Time)'
+    with open('Event_DATE.txt', 'r') as ed:
+        Event_DATE = parser.parse(ed.readline())
+    Event_DATE = Event_DATE.replace(tzinfo=tz.gettz("America/Los_Angeles"))
+    now = datetime.now(tz=tz.tzlocal())
+    countdown = REL.relativedelta(Event_DATE, now)
+    response = f'{countdown.days} Days , {countdown.hours} Hours, {countdown.minutes} Minutes Until Movie Time(7pm Seattle Time)'
     await ctx.send(response)
 
 bot.run(TOKEN)

@@ -6,6 +6,7 @@ import movies
 import os
 import storage
 import logging
+import random
 import datetime
 import dateutil.relativedelta as REL
 from dateutil import parser, tz
@@ -147,6 +148,28 @@ class MoviePoll(commands.Cog):
             with open('Event_DATE.txt', 'w') as fw:
                 fw.write(next_friday)
 
+
+    #testing random poll generator
+    @commands.command(name='random', help='Creates a random movie poll based on current movie list. example: random 5 :where 5 is the number of movies you want in the poll', brief='Creates a random poll')
+    async def start_random(self, ctx, num):
+        choiceList = []
+        current_movies = len(movieData)
+        response = f'{ctx.message.author.name} has started a poll! Please vote for one of the following:\n'
+        needed = int(num)
+        stuff = random.sample(range(0, current_movies), needed)
+
+        for choice in stuff:
+            choiceList.append(movieList.movies[choice]["title"])
+
+        if currentPoll.start(choiceList):
+            response = f'{response}{currentPoll.status()}'
+            if not storage.write(pollFile, currentPoll.suggestion):
+                response = (f"{response}\nCouldn't save the poll to a file"
+                            f"after starting. Poll will not be saved (this is ok)")
+        else:
+            response = "Error starting the poll."
+
+        await ctx.send(response)
 
 class MovieDB(commands.Cog):
     #Suggest a movie for movie night. User gives a title that is added to the MovieList.

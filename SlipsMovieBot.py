@@ -219,7 +219,7 @@ class MovieDB(commands.Cog):
         await ctx.send(response)
 
 
-    @commands.command(name='movieinfo', help='Displays imdb information for a given movie. Usage movieinfo MovieID Example movieinfo 0', brief='Displays the movie imdb information.')
+    @commands.command(name='info', help='Displays imdb information for a given movie. Usage !info MovieID Example !info 0', brief='Displays a movies imdb plot information.')
     async def get_movieinfo(self, ctx, *num):
         titles = []
         if not len(movieList.movies) > 0:

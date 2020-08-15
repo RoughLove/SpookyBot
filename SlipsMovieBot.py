@@ -152,13 +152,10 @@ class MoviePoll(commands.Cog):
 
     #testing random poll generator
     @commands.command(name='random', help='Creates a random movie poll based on current movie list. example: random 5 :where 5 is the number of movies you want in the poll', brief='Creates a random poll')
-    async def start_random(self, ctx, num):
+    async def start_random(self, ctx, num=5):
         choiceList = []
         current_movies = len(movieData)
         response = f'{ctx.message.author.name} has started a poll! Please vote for one of the following:\n'
-        if num == '':
-            num = '5'
-            return
         needed = int(num)
         stuff = random.sample(range(0, current_movies), needed)
 

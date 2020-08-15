@@ -136,6 +136,7 @@ class MoviePoll(commands.Cog):
         winnerIndex = movieList.getMovieID(currentPoll.winner)
         if winnerIndex is None:
             response = f"Hey boss, I couldn't find the ID of the winning movie. Halp."
+            os.remove(pollFile) #added for now to clean up poll file if poll ends with no winner.
             await ctx.send(response)
 
         else:
@@ -155,6 +156,9 @@ class MoviePoll(commands.Cog):
         choiceList = []
         current_movies = len(movieData)
         response = f'{ctx.message.author.name} has started a poll! Please vote for one of the following:\n'
+        if num == '':
+            num = '5'
+            return
         needed = int(num)
         stuff = random.sample(range(0, current_movies), needed)
 

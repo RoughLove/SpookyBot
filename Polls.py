@@ -75,5 +75,6 @@ class Poll():
 				self.winner = key
 		self.isActive = False
 		self.suggestion = {}
+		self.titleList = []
 		response = (f'The winner is {self.winner} with {self.votes} votes!')
 		return response
